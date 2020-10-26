@@ -40,14 +40,14 @@ app.get('/scrape', async (req, res) => {
     res.send(results);
 });
 
-app.get('/test', (req, res) => res.send(`Testing environment variables ${process.env.MY_TEST}`));
+app.get('/test', (req, res) => res.send(`Testing environment MY_TEST variable ${process.env.MY_TEST}`));
 
 app.listen(process.env.PORT || 4500, () => {
     console.log('Server running on port 4500');
-    cron.schedule("* * * * *", async () => {
-        console.log("Running Cron Job");
-        const results = await getAllData();
-        const filtered = results.filter((product: any) => product.price <= product.cutOffPrice);
-        console.log('filtered results', filtered);
-    });
+    // cron.schedule("* * * * *", async () => {
+    //     console.log("Running Cron Job");
+    //     const results = await getAllData();
+    //     const filtered = results.filter((product: any) => product.price <= product.cutOffPrice);
+    //     console.log('filtered results', filtered);
+    // });
 });
