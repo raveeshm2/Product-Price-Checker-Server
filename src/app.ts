@@ -5,6 +5,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import "./db/mongoose";
 import { productModel } from "./db/models";
 import * as bodyParser from "body-parser";
+import cron from 'node-cron';
 import { enableCronJob } from "./cron";
 import { product } from "./db/schema/product"
 import { InstanceType } from "@hasezoey/typegoose";
@@ -17,6 +18,8 @@ export interface ProductInterface {
 }
 
 const app = express();
+
+export let cronGlobal: cron.ScheduledTask | null = null;
 
 app.use(bodyParser.json());
 
@@ -127,6 +130,33 @@ app.put('/product', async (req, res, next) => {
     }
     return res.send({ message: 'Product updated successfully' });
 });
+
+app.post('/startcronjob', (req, res, next) => {
+    let format: string = req.body.hour;
+    let restarted = false;
+    if (!req.body.hour)
+        format = '*'; // By Default run cron job every hour
+    // To run every 2 hour, 6 hour or so. User can send '*/2' or '*/6' in request.
+    if (!cron.validate(`* ${format} * * *`)) throw new Error('Invalid cron format provided');
+    if (cronGlobal) {
+        restarted = true;
+        cronGlobal.destroy();
+    }
+    cronGlobal = enableCronJob(`* ${format} * * *`);
+    if (restarted) {
+        return res.send({ message: 'CRON job restarted successfully' });
+    } else {
+        return res.send({ message: 'CRON job started successfully' });
+    }
+});
+
+app.post('/stopcronjob', (req, res, next) => {
+    if (!cronGlobal)
+        throw new Error('Cron Job is not running');
+    cronGlobal.destroy();
+    cronGlobal = null;
+    return res.send({ message: 'CRON job stopped successfully' });
+})
 
 app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
     res.status(500).send({ error: err.message });

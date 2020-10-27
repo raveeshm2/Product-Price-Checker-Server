@@ -22,14 +22,13 @@ const getHTMLforFilteredResults = (filtered: any) => {
     return html;
 }
 
-export const enableCronJob = () => {
-    cron.schedule("* * * * *", async () => {
+export const enableCronJob = (format: string) => {
+    return cron.schedule(format, async () => {
         console.log("Running Cron Job");
         const results = await getAllData();
         const filtered = results.filter((product: any) => product.price <= product.cutOffPrice);
         console.log('filtered results', filtered);
         const htmlResults = getHTMLforFilteredResults(filtered);
-        console.log('html resilts', htmlResults);
         try {
             await transporter.sendMail({
                 from: `NodeUser@gmail.com`, // sender address
