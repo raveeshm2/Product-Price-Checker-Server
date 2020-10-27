@@ -158,6 +158,14 @@ app.post('/stopcronjob', (req, res, next) => {
     return res.send({ message: 'CRON job stopped successfully' });
 })
 
+// Get status of currently cronning job
+app.get('/cronjobstatus', (req, res, next) => {
+    if (!cronGlobal) {
+        throw new Error('CRON job not running');
+    }
+    return res.send({ message: cronGlobal.getStatus() });
+})
+
 app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
     res.status(500).send({ error: err.message });
 })
