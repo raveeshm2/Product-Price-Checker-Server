@@ -68,6 +68,7 @@ export const getAllData = async () => {
 
 app.get('/scrape', async (req, res) => {
     const results = await getAllData();
+    return res.send(results);
     res.send(`<pre>${results.map(product => JSON.stringify(product, null, 2))}</pre>`);
 });
 
