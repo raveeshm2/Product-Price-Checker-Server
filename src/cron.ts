@@ -12,11 +12,12 @@ const transporter = nodeMailer.createTransport(sendgridTransport({
 
 const getHTMLforFilteredResults = (filtered: any) => {
     let html = '<table border="1"><tr>';
-    html = html.concat('<th>Alias</th><th>Product Name</th><th>Current Price</th><th>Cut off Price</th>');
+    html = html.concat('<th>Alias</th><th>Product Name</th><th>Current Price</th><th>Cut off Price</th><th>URL</th>');
     html = html.concat('</tr>')
     filtered.forEach((product: any) => {
         html = html.concat('<tr>');
         html = html.concat(`<td>${product.alias}</td><td>${product.productName}</td><td>${product.price}</td><td>${product.cutOffPrice}</td>`);
+        html = html.concat(`<td><a href="${product.url}">${product.url}</td>`)
         html = html.concat('</tr>');
     });
     return html;
