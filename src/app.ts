@@ -16,15 +16,30 @@ export interface product {
 
 const app = express();
 
-const getProductPromise = (product: any) => {
+const getFlipKartProductPromise = (product: any) => {
     return new Promise(async (resolve, reject) => {
         const html = (await axios.get(product.url)).data;
         const $ = cheerio.load(html);
-        const price = $('._1vC4OE').html()?.split(';')[1].replace(',', '');
+        const priceElement = $('._1vC4OE').html()?.split(';')[1].replace(',', '');
+        let price;
+        if (priceElement)
+            price = parseInt(priceElement)
         const productName = $('._35KyD6').html();
-        if (!price)
-            return reject('Product not found');
-        resolve({ ...product._doc, price: parseInt(price), productName });
+        resolve({ ...product._doc, price, productName });
+    });
+}
+
+const getAmazonProductPromise = (product: any) => {
+    return new Promise(async (resolve, reject) => {
+        const html = (await axios.get(product.url)).data;
+        const $ = cheerio.load(html);
+        const priceElement = $('#priceblock_dealprice').html() || $('#priceblock_ourprice').html() || $('.priceBlockStrikePriceString').html();
+        let price;
+        if (priceElement)
+            price = parseInt(priceElement.split(';')!.pop()!.replace(',', ''));
+        const productName = $('span#productTitle').html()?.trim();
+        const imgURL = $('#landingImage').attr('data-old-hires');
+        resolve({ ...product, price, productName, imgURL });
     });
 }
 
@@ -32,7 +47,10 @@ export const getAllData = async () => {
     const data = await productModel.find({});
     const allData: any = [];
     data.forEach(product => {
-        allData.push(getProductPromise(product));
+        if (product.portal === 'Flipkart')
+            allData.push(getFlipKartProductPromise(product));
+        else
+            allData.push(getAmazonProductPromise(product));
     });
     const results = await Promise.all(allData);
     return results;
