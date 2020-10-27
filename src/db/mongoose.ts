@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
 import * as fs from 'fs';
-import { product } from "./../app";
+import { ProductInterface } from "./../app";
 import { productModel } from './models';
 
 const initDB = () => {
-    const data: product[] = JSON.parse(fs.readFileSync("data.json", 'utf-8'));
+    const data: ProductInterface[] = JSON.parse(fs.readFileSync("data.json", 'utf-8'));
     data.forEach(async product => {
         await productModel.create({
             ...product
