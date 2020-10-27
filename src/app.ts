@@ -9,6 +9,7 @@ import cron from 'node-cron';
 import { enableCronJob } from "./cron";
 import { product } from "./db/schema/product"
 import { InstanceType } from "@hasezoey/typegoose";
+import cors from "cors";
 
 export interface ProductInterface {
     alias: string
@@ -18,6 +19,8 @@ export interface ProductInterface {
 }
 
 const app = express();
+
+app.use(cors());
 
 export let cronGlobal: cron.ScheduledTask | null = null;
 
