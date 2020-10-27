@@ -13,4 +13,7 @@ export class product extends Typegoose {
 
     @prop({ required: true })
     portal!: string;
+
+    @prop({ required: false })
+    imgURL?: string;
 }

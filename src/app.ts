@@ -35,7 +35,7 @@ const getFlipKartProductPromise = (product: InstanceType<product>) => {
         if (priceElement)
             price = parseInt(priceElement)
         const productName = $('._35KyD6').html();
-        resolve({ id: product._id, alias: product.alias, productName, url: product.url, portal: product.portal, price, cutOffPrice: product.cutOffPrice });
+        resolve({ id: product._id, alias: product.alias, productName, url: product.url, portal: product.portal, price, cutOffPrice: product.cutOffPrice, imgURL: product.imgURL });
     });
 }
 
@@ -48,7 +48,7 @@ const getAmazonProductPromise = (product: InstanceType<product>) => {
         if (priceElement)
             price = parseInt(priceElement.split(';')!.pop()!.replace(',', ''));
         const productName = $('span#productTitle').html()?.trim();
-        const imgURL = $('#landingImage').attr('data-old-hires');
+        const imgURL = product.imgURL || $('#landingImage').attr('data-old-hires');
         resolve({ id: product._id, alias: product.alias, productName, url: product.url, portal: product.portal, imgURL, price, cutOffPrice: product.cutOffPrice });
     });
 }
