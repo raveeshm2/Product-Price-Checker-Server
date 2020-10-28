@@ -115,6 +115,7 @@ app.put('/product', async (req, res, next) => {
     const alias = req.body.alias;
     const url = req.body.url;
     const portal = req.body.portal;
+    const imgURL = req.body.imgURL;
     if (!id) return next(new Error('Product ID is required'));
     const product = await productModel.findById(id);
     if (!product) return next(new Error('Product not found in database'));
@@ -128,6 +129,8 @@ app.put('/product', async (req, res, next) => {
             product.url = url;
         if (portal)
             product.portal = portal;
+        if (imgURL)
+            product.imgURL = imgURL;
         await product.save();
     } catch (err) {
         return next(new Error('Product could not be updated. Please try again later'));
