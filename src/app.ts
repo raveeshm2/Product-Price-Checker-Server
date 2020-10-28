@@ -75,7 +75,7 @@ app.get('/scrape', async (req, res) => {
 app.post('/product', async (req, res, next) => {
     const alias = req.body.alias;
     const url = req.body.url;
-    const cutOffPrice = req.body.cutOffPrice;
+    const cutOffPrice = parseInt(req.body.cutOffPrice);
     const portal = req.body.portal;
     if (!alias) return next(new Error('Please provide alias name'));
     if (!url) return next(new Error('Please provide product URL'));
@@ -111,7 +111,7 @@ app.delete('/product', async (req, res, next) => {
 
 app.put('/product', async (req, res, next) => {
     const id = req.body.id;
-    const cutOffPrice = req.body.cutOffPrice;
+    const cutOffPrice = parseInt(req.body.cutOffPrice);
     const alias = req.body.alias;
     const url = req.body.url;
     const portal = req.body.portal;
