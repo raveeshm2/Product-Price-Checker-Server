@@ -77,6 +77,7 @@ app.post('/product', async (req, res, next) => {
     const url = req.body.url;
     const cutOffPrice = parseInt(req.body.cutOffPrice);
     const portal = req.body.portal;
+    const imgURL = req.body.imgURL;
     if (!alias) return next(new Error('Please provide alias name'));
     if (!url) return next(new Error('Please provide product URL'));
     if (!cutOffPrice) return next(new Error('Please provide a cut off price'));
@@ -87,7 +88,8 @@ app.post('/product', async (req, res, next) => {
             alias,
             url,
             cutOffPrice,
-            portal
+            portal,
+            imgURL
         });
     } catch (err) {
         return res.send({ error: 'Error creating Product. Please try again later' });
