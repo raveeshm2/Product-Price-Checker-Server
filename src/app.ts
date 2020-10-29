@@ -54,16 +54,21 @@ const getAmazonProductPromise = (product: InstanceType<product>) => {
 }
 
 export const getAllData = async () => {
-    const data = await productModel.find({});
-    const allData: any = [];
-    data.forEach(product => {
-        if (product.portal === 'Flipkart')
-            allData.push(getFlipKartProductPromise(product));
-        else
-            allData.push(getAmazonProductPromise(product));
-    });
-    const results = await Promise.all(allData);
-    return results;
+    try {
+        const data = await productModel.find({});
+        const allData: any = [];
+        data.forEach(product => {
+            if (product.portal === 'Flipkart')
+                allData.push(getFlipKartProductPromise(product));
+            else
+                allData.push(getAmazonProductPromise(product));
+        });
+        const results = await Promise.all(allData);
+        return results;
+    } catch (err) {
+        return { error: 'Error occured ' + err }
+    }
+
 }
 
 app.get('/scrape', async (req, res) => {
