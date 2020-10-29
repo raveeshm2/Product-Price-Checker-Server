@@ -141,17 +141,39 @@ app.put('/product', async (req, res, next) => {
 });
 
 app.post('/startcronjob', (req, res, next) => {
-    let format: string = req.body.hour;
     let restarted = false;
-    if (!req.body.hour)
-        format = '*'; // By Default run cron job every hour
+    let expression: string;
+    switch (req.body.hour) {
+        case '15min':
+            expression = '* */15 * * * *';
+        case '30min':
+            expression = '* */30 * * * *';
+        case '1hr':
+            expression = '* * */1 * * *';
+        case '2hr':
+            expression = '* * */2 * * *';
+        case '4hr':
+            expression = '* * */4 * * *';
+        case '6hr':
+            expression = '* * */6 * * *';
+        case '8hr':
+            expression = '* * */8 * * *';
+        case '12hr':
+            expression = '* * */12 * * *';
+        case '1day':
+            expression = '* * * */1 * *';
+        case '1month':
+            expression = '* * * * */1 *';
+        default:
+            expression = '* * * */1 * *'; // By default run once every day
+    }
     // To run every 2 hour, 6 hour or so. User can send '*/2' or '*/6' in request.
-    if (!cron.validate(`* ${format} * * *`)) throw new Error('Invalid cron format provided');
+    if (!cron.validate(expression)) throw new Error('Invalid cron format provided');
     if (cronGlobal) {
         restarted = true;
         cronGlobal.destroy();
     }
-    cronGlobal = enableCronJob(`* ${format} * * *`);
+    cronGlobal = enableCronJob(expression);
     if (restarted) {
         return res.send({ message: 'CRON job restarted successfully' });
     } else {
