@@ -216,4 +216,4 @@ app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
 
 app.listen(process.env.PORT || 4500, () => {
     console.log(`Server running on port ${process.env.PORT || '4500'}`);
-});
+}).setTimeout(60 * 5 * 1000); // 5 mins default timeout
