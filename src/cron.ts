@@ -27,19 +27,21 @@ export const enableCronJob = (format: string) => {
     return cron.schedule(format, async () => {
         console.log("Running Cron Job");
         const results = await getAllData();
-        const filtered = results.filter((product: any) => product.price <= product.cutOffPrice);
-        console.log('filtered results', filtered);
-        const htmlResults = getHTMLforFilteredResults(filtered);
-        try {
-            await transporter.sendMail({
-                from: `NodeUser@gmail.com`, // sender address
-                to: 'raveeshm2@gmail.com', // list of receivers
-                subject: "Filtered list", // Subject line
-                html: `Filtered results from heroku are: ${htmlResults}`
-            });
-        } catch (err) {
-            console.log('Error sending email');
-            console.log('err', err);
+        if (Array.isArray(results)) {
+            const filtered = results.filter((product: any) => product.price <= product.cutOffPrice);
+            console.log('filtered results', filtered);
+            const htmlResults = getHTMLforFilteredResults(filtered);
+            try {
+                await transporter.sendMail({
+                    from: `NodeUser@gmail.com`, // sender address
+                    to: 'raveeshm2@gmail.com', // list of receivers
+                    subject: "Filtered list", // Subject line
+                    html: `Filtered results from heroku are: ${htmlResults}`
+                });
+            } catch (err) {
+                console.log('Error sending email');
+                console.log('err', err);
+            }
         }
     });
 }
