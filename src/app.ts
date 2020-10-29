@@ -144,30 +144,38 @@ app.post('/startcronjob', (req, res, next) => {
     let restarted = false;
     let expression: string;
     switch (req.body.hour) {
-        case '15min':
-            expression = '* */15 * * * *';
+        case "15min":
+            expression = '*/15 * * * *';
+            break;
         case '30min':
-            expression = '* */30 * * * *';
+            expression = '*/30 * * * *';
+            break;
         case '1hr':
-            expression = '* * */1 * * *';
+            expression = '* */1 * * *';
+            break;
         case '2hr':
-            expression = '* * */2 * * *';
+            expression = '* */2 * * *';
+            break;
         case '4hr':
-            expression = '* * */4 * * *';
+            expression = '* */4 * * *';
+            break;
         case '6hr':
-            expression = '* * */6 * * *';
+            expression = '* */6 * * *';
+            break;
         case '8hr':
-            expression = '* * */8 * * *';
+            expression = '* */8 * * *';
         case '12hr':
-            expression = '* * */12 * * *';
+            expression = '* */12 * * *';
+            break;
         case '1day':
-            expression = '* * * */1 * *';
+            expression = '* * */1 * *';
+            break;
         case '1month':
-            expression = '* * * * */1 *';
+            expression = '* * * */1 *';
+            break;
         default:
-            expression = '* * * */1 * *'; // By default run once every day
+            expression = '* * */1 * *'; // By default run once every day
     }
-    // To run every 2 hour, 6 hour or so. User can send '*/2' or '*/6' in request.
     if (!cron.validate(expression)) throw new Error('Invalid cron format provided');
     if (cronGlobal) {
         restarted = true;
@@ -202,5 +210,5 @@ app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
 })
 
 app.listen(process.env.PORT || 4500, () => {
-    console.log('Server running on port 4500');
+    console.log(`Server running on port ${process.env.PORT || '4500'}`);
 });
