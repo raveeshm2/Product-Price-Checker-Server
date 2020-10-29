@@ -175,9 +175,9 @@ app.post('/startcronjob', (req, res, next) => {
     }
     cronGlobal = enableCronJob(expression);
     if (restarted) {
-        return res.send({ message: 'CRON job restarted successfully' });
+        return res.send({ message: 'CRON job restarted successfully ' + expression });
     } else {
-        return res.send({ message: 'CRON job started successfully' });
+        return res.send({ message: 'CRON job started successfully ' + expression });
     }
 });
 
