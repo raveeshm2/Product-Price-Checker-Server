@@ -2,7 +2,9 @@ import cron from 'node-cron';
 import * as nodeMailer from "nodemailer";
 // @ts-ignore
 import sendgridTransport from "nodemailer-sendgrid-transport";
-import { getAllData } from "./app";
+import { userModel } from '../db/models';
+import { user } from '../db/schema/user';
+import { getAllData } from "./fetchProducts";
 
 const transporter = nodeMailer.createTransport(sendgridTransport({
     auth: {
@@ -32,11 +34,13 @@ export const enableCronJob = (format: string) => {
             console.log('filtered results', filtered);
             const htmlResults = getHTMLforFilteredResults(filtered);
             try {
+                const user = await userModel.findOne({});
+                const email = user!.email;
                 await transporter.sendMail({
                     from: `NodeUser@gmail.com`, // sender address
-                    to: 'raveeshm2@gmail.com', // list of receivers
-                    subject: "Filtered list", // Subject line
-                    html: `Filtered results from heroku are: ${htmlResults}`
+                    to: email, // list of receivers
+                    subject: "Cut Off Price Hit", // Subject line
+                    html: `Following products are available on SALE: ${htmlResults}`
                 });
             } catch (err) {
                 console.log('Error sending email');
