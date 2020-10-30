@@ -6,10 +6,12 @@ import { enableCronJob } from '../common/cron';
 const router = express.Router();
 
 let cronGlobal: cron.ScheduledTask | null = null;
+let cronFrequency: string | null = null;
 
 router.post('/start', async (req, res, next) => {
     let restarted = false;
     let expression: string;
+    cronFrequency = req.body.hour || '1day';
     switch (req.body.hour) {
         case "15min":
             expression = '*/15 * * * *';
@@ -77,7 +79,7 @@ router.get('/status', async (req, res, next) => {
     const status = cronGlobal?.getStatus ? "Running" : 'Not running';
     const user = await userModel.findOne({});
     const email = user!.email;
-    return res.send({ status, email });
+    return res.send({ status, cronFrequency, email });
 });
 
 export default router;
