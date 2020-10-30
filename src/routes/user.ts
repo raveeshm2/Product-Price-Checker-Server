@@ -5,8 +5,11 @@ import * as jwt from "jsonwebtoken";
 
 const router = express.Router();
 
-router.get('/login', async (req, res, next) => {
+router.post('/login', async (req, res, next) => {
     const user = await userModel.findOne({});
+    if (!req.body.password) {
+        throw new Error('Please provide password');
+    }
     try {
         const result = await bcrypt.compare(req.body.password, user!.password);
         if (result) {

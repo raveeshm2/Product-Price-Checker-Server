@@ -32,19 +32,21 @@ export const enableCronJob = (format: string) => {
         if (Array.isArray(results)) {
             const filtered = results.filter((product: any) => product.price <= product.cutOffPrice);
             console.log('filtered results', filtered);
-            const htmlResults = getHTMLforFilteredResults(filtered);
-            try {
-                const user = await userModel.findOne({});
-                const email = user!.email;
-                await transporter.sendMail({
-                    from: `NodeUser@gmail.com`, // sender address
-                    to: email, // list of receivers
-                    subject: "Cut Off Price Hit", // Subject line
-                    html: `Following products are available on SALE: ${htmlResults}`
-                });
-            } catch (err) {
-                console.log('Error sending email');
-                console.log('err', err);
+            if (filtered.length > 0) {
+                const htmlResults = getHTMLforFilteredResults(filtered);
+                try {
+                    const user = await userModel.findOne({});
+                    const email = user!.email;
+                    await transporter.sendMail({
+                        from: `NodeUser@gmail.com`, // sender address
+                        to: email, // list of receivers
+                        subject: "Cut Off Price Hit", // Subject line
+                        html: `Following products are available on below cut off price: ${htmlResults}`
+                    });
+                } catch (err) {
+                    console.log('Error sending email');
+                    console.log('err', err);
+                }
             }
         }
     });
