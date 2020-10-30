@@ -3,7 +3,6 @@ import * as nodeMailer from "nodemailer";
 // @ts-ignore
 import sendgridTransport from "nodemailer-sendgrid-transport";
 import { userModel } from '../db/models';
-import { user } from '../db/schema/user';
 import { getAllData } from "./fetchProducts";
 
 const transporter = nodeMailer.createTransport(sendgridTransport({

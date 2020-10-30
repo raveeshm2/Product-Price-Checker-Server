@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/login', async (req, res, next) => {
     const user = await userModel.findOne({});
     if (!req.body.password) {
-        throw new Error('Please provide password');
+        return next(new Error('Please provide password'));
     }
     try {
         const result = await bcrypt.compare(req.body.password, user!.password);
@@ -20,9 +20,9 @@ router.post('/login', async (req, res, next) => {
             });
         }
     } catch (err) {
-        throw new Error('Invalid login credentials');
+        return next(new Error('Invalid login credentials'));
     }
-    throw new Error('Invalid login credentials');
+    return next(new Error('Invalid login credentials'));
 });
 
 router.put('/change', async (req, res, next) => {

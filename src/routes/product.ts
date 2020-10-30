@@ -23,7 +23,7 @@ router.post('/', async (req, res, next) => {
             imgURL
         });
     } catch (err) {
-        return res.send({ error: 'Error creating Product. Please try again later' });
+        return next(new Error('Error creating Product. Please trya again later'));
     }
     return res.send({ message: 'Product added successfully' });
 });
