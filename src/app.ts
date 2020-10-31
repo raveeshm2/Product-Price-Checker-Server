@@ -8,6 +8,8 @@ import ProductRouter from "./routes/product"
 import CronJobRouter from "./routes/cron";
 import UserRouter from "./routes/user";
 import { checkForEnvironmentVariables } from "./common/util";
+import session from "./middlewares/session";
+import authenticator from "./middlewares/authenticator";
 
 // Checks for environment variables before booting applications and throw error
 // if any of the required variable is missing
@@ -19,13 +21,15 @@ app.use(cors());
 
 app.use(bodyParser.json());
 
-app.use('/product', ProductRouter);
+app.use(session);
 
-app.use('/cron', CronJobRouter);
+app.use('/product', authenticator, ProductRouter);
+
+app.use('/cron', authenticator, CronJobRouter);
 
 app.use('/user', UserRouter);
 
-app.get('/scrape', async (req, res, next) => {
+app.get('/scrape', authenticator, async (req, res, next) => {
     const results = await getAllData();
     return res.send(results);
 });

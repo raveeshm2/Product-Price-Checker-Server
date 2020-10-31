@@ -28,7 +28,7 @@ export const checkForEnvironmentVariables = () => {
         throw new Error(generateErrorMessage('DB_PASSWORD'));
     }
     if (!process.env.JWT_KEY) {
-        throw new Error(generateErrorMessage('JWT_KEY'));
+        throw new Error(generateErrorMessage('SECRET_KEY'));
     }
     if (!process.env.SENDGRID_KEY) {
         throw new Error(generateErrorMessage('SENDGRID_KEY'));
