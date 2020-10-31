@@ -22,10 +22,7 @@ export function generateErrorMessage(variable: string) {
 // Checks for required environment variables while booting up right in the beginning
 export const checkForEnvironmentVariables = () => {
     if (!process.env.DB_USERNAME) {
-        throw new Error(generateErrorMessage('DB_USERNAME'));
-    }
-    if (!process.env.DB_PASSWORD) {
-        throw new Error(generateErrorMessage('DB_PASSWORD'));
+        throw new Error(generateErrorMessage('MONGO_URI'));
     }
     if (!process.env.JWT_KEY) {
         throw new Error(generateErrorMessage('SECRET_KEY'));

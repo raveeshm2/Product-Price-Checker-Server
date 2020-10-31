@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { init } from "../common/util";
 
 console.log('Connecting to mongo db');
-mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@raveesh.wlkt9.mongodb.net/PriceChecker?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+mongoose.connect(process.env.MONGO_URI!, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
     .then(() => {
         console.log('MongoDB Connected');
         if (process.env.init === 'Y') {
