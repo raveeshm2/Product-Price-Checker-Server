@@ -2,6 +2,7 @@ import express from 'express';
 import { userModel } from '../db/models';
 import cron from 'node-cron';
 import { enableCronJob } from '../common/cron';
+import { timeOut } from '../common/util';
 
 const router = express.Router();
 
@@ -59,19 +60,21 @@ router.post('/start', async (req, res, next) => {
         await user!.save();
     }
     cronGlobal = enableCronJob(expression);
+    await timeOut();
     if (restarted) {
-        return res.send({ message: 'CRON job restarted successfully ' + expression });
+        return res.send({ message: ['CRON job restarted successfully '] });
     } else {
-        return res.send({ message: 'CRON job started successfully ' + expression });
+        return res.send({ message: ['CRON job started successfully '] });
     }
 });
 
-router.post('/stop', (req, res, next) => {
+router.post('/stop', async (req, res, next) => {
     if (!cronGlobal)
-        throw new Error('Cron Job is not running');
+        return next(new Error('Cron Job is not running'));
     cronGlobal.destroy();
     cronGlobal = null;
-    return res.send({ message: 'CRON job stopped successfully' });
+    await timeOut();
+    return res.send({ message: ['CRON job stopped successfully'] });
 });
 
 // Get status of currently running cron job
@@ -79,6 +82,7 @@ router.get('/status', async (req, res, next) => {
     const status = cronGlobal?.getStatus ? "Running" : 'Not running';
     const user = await userModel.findOne({});
     const email = user!.email;
+    await timeOut();
     return res.send({ status, cronFrequency, email });
 });
 

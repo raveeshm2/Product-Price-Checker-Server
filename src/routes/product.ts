@@ -1,4 +1,5 @@
 import express from 'express';
+import { timeOut } from '../common/util';
 import { productModel } from '../db/models';
 
 const router = express.Router();
@@ -25,7 +26,8 @@ router.post('/', async (req, res, next) => {
     } catch (err) {
         return next(new Error('Error creating Product. Please trya again later'));
     }
-    return res.send({ message: 'Product added successfully' });
+    await timeOut();
+    return res.send({ message: ['Product added successfully'] });
 });
 
 
@@ -39,7 +41,8 @@ router.delete('/', async (req, res, next) => {
     } catch (err) {
         return next(new Error('Product deletion failed. Please try again later'));
     }
-    return res.send({ message: 'Product deleted successfully' });
+    await timeOut();
+    return res.send({ message: ['Product deleted successfully'] });
 });
 
 router.put('/', async (req, res, next) => {
@@ -68,7 +71,8 @@ router.put('/', async (req, res, next) => {
     } catch (err) {
         return next(new Error('Product could not be updated. Please try again later'));
     }
-    return res.send({ message: 'Product updated successfully' });
+    await timeOut();
+    return res.send({ message: ['Product updated successfully'] });
 });
 
 export default router;

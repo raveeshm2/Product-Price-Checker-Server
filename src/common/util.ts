@@ -21,13 +21,21 @@ export function generateErrorMessage(variable: string) {
 
 // Checks for required environment variables while booting up right in the beginning
 export const checkForEnvironmentVariables = () => {
-    if (!process.env.DB_USERNAME) {
+    if (!process.env.MONGO_URI) {
         throw new Error(generateErrorMessage('MONGO_URI'));
     }
-    if (!process.env.JWT_KEY) {
+    if (!process.env.SECRET_KEY) {
         throw new Error(generateErrorMessage('SECRET_KEY'));
     }
     if (!process.env.SENDGRID_KEY) {
         throw new Error(generateErrorMessage('SENDGRID_KEY'));
     }
+}
+
+export const timeOut = () => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve();
+        }, process.env.NODE_ENV !== "production" ? 2000 : 0);
+    })
 }

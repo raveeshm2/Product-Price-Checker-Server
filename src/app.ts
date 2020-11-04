@@ -17,7 +17,7 @@ checkForEnvironmentVariables();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 
 app.use(bodyParser.json());
 
@@ -35,7 +35,7 @@ app.get('/scrape', authenticator, async (req, res, next) => {
 });
 
 app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
-    res.status(500).send({ error: err.message });
+    res.status(500).send({ errors: [err.message] });
 })
 
 app.listen(process.env.PORT || 4500, () => {
