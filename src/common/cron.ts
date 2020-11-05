@@ -30,7 +30,6 @@ export const enableCronJob = (format: string) => {
         const results = await getAllData();
         if (Array.isArray(results)) {
             const filtered = results.filter((product: any) => product.price <= product.cutOffPrice);
-            console.log('filtered results', filtered);
             if (filtered.length > 0) {
                 const htmlResults = getHTMLforFilteredResults(filtered);
                 try {
@@ -40,7 +39,7 @@ export const enableCronJob = (format: string) => {
                         from: `NodeUser@gmail.com`, // sender address
                         to: email, // list of receivers
                         subject: "Cut Off Price Hit", // Subject line
-                        html: `Following products are available on below cut off price: ${htmlResults}`
+                        html: `Your selected products are available below cut off price: ${htmlResults}`
                     });
                 } catch (err) {
                     console.log('Error sending email');

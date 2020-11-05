@@ -10,6 +10,7 @@ import UserRouter from "./routes/user";
 import { checkForEnvironmentVariables } from "./common/util";
 import session from "./middlewares/session";
 import authenticator from "./middlewares/authenticator";
+import * as path from 'path';
 
 // Checks for environment variables before booting applications and throw error
 // if any of the required variable is missing
@@ -39,6 +40,14 @@ app.get('/scrape', authenticator, async (req, res, next) => {
 app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
     res.status(500).send({ errors: [err.message] });
 });
+
+// Serve React APP on the same URL if in production
+if (process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname, '..', 'build-client')));
+    app.get('/*', function (req, res) {
+        res.sendFile(path.join(__dirname, '..', 'build-client', 'index.html'));
+    });
+}
 
 app.listen(process.env.PORT || 4500, () => {
     console.log(`Server running on port ${process.env.PORT || '4500'}`);
