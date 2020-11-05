@@ -17,7 +17,9 @@ checkForEnvironmentVariables();
 
 const app = express();
 
-app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+if (process.env.NODE_ENV !== "production") {
+    app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+}
 
 app.use(bodyParser.json());
 
@@ -36,8 +38,8 @@ app.get('/scrape', authenticator, async (req, res, next) => {
 
 app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
     res.status(500).send({ errors: [err.message] });
-})
+});
 
 app.listen(process.env.PORT || 4500, () => {
     console.log(`Server running on port ${process.env.PORT || '4500'}`);
-}).setTimeout(60 * 5 * 1000); // 5 mins default timeout
+}).setTimeout(60 * 7 * 1000); // 7 mins default timeout
