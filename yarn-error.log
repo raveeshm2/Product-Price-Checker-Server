@@ -1,5 +1,5 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add connect-mongo
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add cookie
 
 PATH: 
   C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\sq\1044\bin;C:\sq\1044_test\bin;C:\sq\1044\bin;C:\sq\1013\bin;C:\Program Files (x86)\TRICENTIS\Tosca Testsuite;C:\Tosca_Projects;C:\Program Files (x86)\TRICENTIS\Tosca Testsuite\dll;C:\Program Files (x86)\TRICENTIS\Tosca Testsuite\dll\GuptaEngine;C:\Program Files (x86)\TRICENTIS\Tosca Testsuite\;C:\Program Files (x86)\TRICENTIS\Tosca Testsuite\dll\DelphiEngine;C:\Program Files (x86)\TRICENTIS\Tosca Testsuite\dll\PBEngine;C:\Program Files (x86)\TRICENTIS\Tosca Testsuite\dll\VBEngine;C:\Program Files (x86)\TRICENTIS\Tosca Testsuite\dll\DotNetHooking;;C:\Program Files (x86)\TRICENTIS\Tosca Testsuite\Resources\Mobile\Tools;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\Webex\Webex\Applications;C:\Program Files (x86)\Sennheiser\SoftphoneSDK\;C:\Program Files\TortoiseSVN\bin;C:\Program Files\TortoiseGit\bin;C:\Program Files\nodejs\;C:\raveesh\software\apache-maven-3.6.1\bin;C:\Program Files\Git\bin;C:\softwares\apache-ant-1.9.14\bin;C:\Program Files\Java\jdk1.8.0_102\bin;C:\Program Files\Java\jdk1.8.0_102\lib;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files (x86)\Yarn\bin\;C:\Program Files (x86)\Yarn\bin;C:\programs\ngrok\ngrok-stable-windows-amd64;C:\Users\SG0302379\AppData\Roaming\npm\node_modules\chromedriver\lib\chromedriver;C:\SabreDeveloper\maven\apache-maven-3.3.9-bin\apache-maven-3.3.9;;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;C:\Users\SG0302379\.windows-build-tools\python27\;C:\Users\SG0302379\.windows-build-tools\python27\;C:\Users\SG0302379\.windows-build-tools\python27\;C:\Users\SG0302379\AppData\Local\Programs\Python\Python37\Scripts\;C:\Users\SG0302379\AppData\Local\Programs\Python\Python37\;C:\Users\SG0302379\AppData\Local\Microsoft\WindowsApps;C:\sq\1042\bin;C:\Users\SG0302379\AppData\Roaming\npm;C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2019.3.2\bin;C:\Users\SG0302379\AppData\Local\Yarn\bin;C:\Users\SG0302379\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\heroku\bin
@@ -14,8 +14,8 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: connect ECONNABORTED 104.16.20.35:443
-      at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1106:14)
+  Error: getaddrinfo EAI_AGAIN registry.npmjs.com registry.npmjs.com:443
+      at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:56:26)
 
 npm manifest: 
   {
@@ -38,6 +38,7 @@ npm manifest:
       "bcryptjs": "^2.4.3",
       "body-parser": "^1.19.0",
       "cheerio": "^1.0.0-rc.3",
+      "connect-mongo": "^3.2.0",
       "cors": "^2.8.5",
       "dotenv": "^8.2.0",
       "express": "^4.17.1",
@@ -694,6 +695,13 @@ Lockfile:
       unique-string "^2.0.0"
       write-file-atomic "^3.0.0"
       xdg-basedir "^4.0.0"
+  
+  connect-mongo@^3.2.0:
+    version "3.2.0"
+    resolved "https://registry.yarnpkg.com/connect-mongo/-/connect-mongo-3.2.0.tgz#20f776c7f2a9d8144fc76cfdcbf33edb05eb4d52"
+    integrity sha512-0Mx88079Z20CG909wCFlR3UxhMYGg6Ibn1hkIje1hwsqOLWtL9HJV+XD0DAjUvQScK6WqY/FA8tSVQM9rR64Rw==
+    dependencies:
+      mongodb "^3.1.0"
   
   content-disposition@0.5.3:
     version "0.5.3"
@@ -1716,7 +1724,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.5.tgz#67d66014b66a6a8aaa0c083c5fd58df4e4e97602"
     integrity sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==
   
-  mongodb@3.6.2:
+  mongodb@3.6.2, mongodb@^3.1.0:
     version "3.6.2"
     resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-3.6.2.tgz#1154a4ac107bf1375112d83a29c5cf97704e96b6"
     integrity sha512-sSZOb04w3HcnrrXC82NEh/YGCmBuRgR+C1hZgmmv4L6dBz4BkRse6Y8/q/neXer9i95fKUBbFi4KgeceXmbsOA==

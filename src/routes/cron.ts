@@ -21,21 +21,21 @@ router.post('/start', async (req, res, next) => {
             expression = '*/30 * * * *';
             break;
         case '1hr':
-            expression = '* */1 * * *';
+            expression = '0 */1 * * *';
             break;
         case '2hr':
-            expression = '* */2 * * *';
+            expression = '0 */2 * * *';
             break;
         case '4hr':
-            expression = '* */4 * * *';
+            expression = '0 */4 * * *';
             break;
         case '6hr':
-            expression = '* */6 * * *';
+            expression = '0 */6 * * *';
             break;
         case '8hr':
-            expression = '* */8 * * *';
+            expression = '0 */8 * * *';
         case '12hr':
-            expression = '* */12 * * *';
+            expression = '0 */12 * * *';
             break;
         case '1day':
             expression = '30 11 */1 * *';
