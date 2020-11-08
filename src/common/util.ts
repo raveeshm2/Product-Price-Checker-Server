@@ -1,5 +1,8 @@
 import { productModel, userModel } from "../db/models";
 import * as bcrypt from "bcryptjs";
+import { enableCronJob } from "./cron";
+import { setCronGlobal } from "../routes/cron";
+import http from "http";
 
 async function clearDB() {
     await userModel.deleteMany({});
@@ -30,6 +33,9 @@ export const checkForEnvironmentVariables = () => {
     if (!process.env.SENDGRID_KEY) {
         throw new Error(generateErrorMessage('SENDGRID_KEY'));
     }
+    if (process.env.NODE_ENV === "production" && !process.env.APP_NAME) {
+        throw new Error(generateErrorMessage('APP_NAME'));
+    }
 }
 
 export const timeOut = () => {
@@ -38,4 +44,63 @@ export const timeOut = () => {
             resolve();
         }, process.env.NODE_ENV !== "production" ? 2000 : 0);
     })
+}
+
+// Runs cron jobs after waking up from sleep state
+export async function checkForCronJobs() {
+    const user = await userModel.findOne({});
+    if (user && user.cron) {
+        console.log("Restarting CRON job");
+        setCronGlobal(enableCronJob(user.cron));
+    }
+}
+
+export function frequencyToTextMapper(freq: string): string {
+    switch (freq) {
+        case '*/15 * * * *':
+            return '15 minutes';
+        case '*/30 * * * *':
+            return '30 minutes';
+        case '0 */1 * * *':
+            return '1 hour';
+        case '0 */2 * * *':
+            return '2 hours';
+        case '0 */4 * * *':
+            return '4 hours'
+        case '0 */6 * * *':
+            return '6 hours';
+        case '0 */8 * * *':
+            return '8 hours';
+        case '0 */12 * * *':
+            return '12 hours';
+        case '30 11 */1 * *':
+            return 'day';
+        case '30 11 */7 * *':
+            return 'week'
+        case '30 11 15 */1 *':
+            return 'month';
+    }
+    return 'day';
+}
+
+export function startKeepAlive() {
+    setInterval(function () {
+        var options = {
+            host: process.env.APP_NAME,
+            port: process.env.PORT,
+            path: '/'
+        };
+        http.get(options, function (res) {
+            res.on('data', function (chunk) {
+                try {
+                    // optional logging... disable after it's working
+                    console.log("PINGING HEROKU RESPONSE: " + chunk);
+                } catch (err) {
+                    console.log(err.message);
+                }
+            });
+        }).on('error', function (err) {
+            console.log("Error: " + err.message);
+        });
+    }, 20 * 60 * 1000); // load every 20 minutes
 }

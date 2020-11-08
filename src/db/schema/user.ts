@@ -7,4 +7,7 @@ export class user extends Typegoose {
 
     @prop({ required: true })
     password!: string
+
+    @prop()
+    cron?: string
 }

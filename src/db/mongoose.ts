@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { init } from "../common/util";
+import { checkForCronJobs, init } from "../common/util";
 
 console.log('Connecting to mongo db');
 mongoose.connect(process.env.MONGO_URI!, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
@@ -14,6 +14,8 @@ mongoose.connect(process.env.MONGO_URI!, { useNewUrlParser: true, useUnifiedTopo
                 init();
                 console.log('DB initialized');
             }
+        } else {
+            checkForCronJobs();
         }
     }).catch(err => console.log("errorErrorError ", err));
 

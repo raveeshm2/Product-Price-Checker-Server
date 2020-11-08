@@ -2,17 +2,15 @@ import express from 'express';
 import { userModel } from '../db/models';
 import cron from 'node-cron';
 import { enableCronJob } from '../common/cron';
-import { timeOut } from '../common/util';
+import { frequencyToTextMapper, timeOut } from '../common/util';
 
 const router = express.Router();
 
 let cronGlobal: cron.ScheduledTask | null = null;
-let cronFrequency: string | null = null;
 
 router.post('/start', async (req, res, next) => {
     let restarted = false;
     let expression: string;
-    cronFrequency = req.body.hour || '1day';
     switch (req.body.hour) {
         case "15min":
             expression = '*/15 * * * *';
@@ -34,6 +32,7 @@ router.post('/start', async (req, res, next) => {
             break;
         case '8hr':
             expression = '0 */8 * * *';
+            break;
         case '12hr':
             expression = '0 */12 * * *';
             break;
@@ -57,6 +56,7 @@ router.post('/start', async (req, res, next) => {
     if (email) {
         const user = await userModel.findOne({});
         user!.email = email;
+        user!.cron = expression;
         await user!.save();
     }
     cronGlobal = enableCronJob(expression);
@@ -73,6 +73,9 @@ router.post('/stop', async (req, res, next) => {
         return next(new Error('Cron Job is not running'));
     cronGlobal.destroy();
     cronGlobal = null;
+    const user = await userModel.findOne({});
+    user!.cron = undefined;
+    await user?.save();
     await timeOut();
     return res.send({ message: ['CRON job stopped successfully'] });
 });
@@ -83,7 +86,15 @@ router.get('/status', async (req, res, next) => {
     const user = await userModel.findOne({});
     const email = user!.email;
     await timeOut();
-    return res.send({ status, cronFrequency, email });
+    if (status === "Running" && user?.cron) {
+        return res.send({ status, cronFrequency: frequencyToTextMapper(user.cron), email });
+    } else {
+        return res.send({ status, cronFrequency: undefined, email });
+    }
 });
+
+export function setCronGlobal(value: cron.ScheduledTask | null) {
+    cronGlobal = value;
+}
 
 export default router;
