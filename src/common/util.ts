@@ -2,7 +2,7 @@ import { productModel, userModel } from "../db/models";
 import * as bcrypt from "bcryptjs";
 import { enableCronJob } from "./cron";
 import { setCronGlobal } from "../routes/cron";
-import http from "http";
+import Axios from "axios";
 
 async function clearDB() {
     await userModel.deleteMany({});
@@ -33,8 +33,8 @@ export const checkForEnvironmentVariables = () => {
     if (!process.env.SENDGRID_KEY) {
         throw new Error(generateErrorMessage('SENDGRID_KEY'));
     }
-    if (process.env.NODE_ENV === "production" && !process.env.APP_NAME) {
-        throw new Error(generateErrorMessage('APP_NAME'));
+    if (process.env.NODE_ENV === "production" && !process.env.APP_URL) {
+        throw new Error(generateErrorMessage('APP_URL'));
     }
 }
 
@@ -84,23 +84,11 @@ export function frequencyToTextMapper(freq: string): string {
 }
 
 export function startKeepAlive() {
+    console.log('Starting Keep Awake function');
     setInterval(function () {
-        var options = {
-            host: process.env.APP_NAME,
-            port: process.env.PORT,
-            path: '/'
-        };
-        http.get(options, function (res) {
-            res.on('data', function (chunk) {
-                try {
-                    // optional logging... disable after it's working
-                    console.log("PINGING HEROKU RESPONSE: " + chunk);
-                } catch (err) {
-                    console.log(err.message);
-                }
+        Axios.get(process.env.APP_URL!).
+            then(res => console.log('Pinging APP URL Success')).catch(err => {
+                console.log('Pinging APP URL failure', err);
             });
-        }).on('error', function (err) {
-            console.log("Error: " + err.message);
-        });
     }, 20 * 60 * 1000); // load every 20 minutes
 }
