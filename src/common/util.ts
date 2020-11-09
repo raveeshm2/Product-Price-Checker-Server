@@ -85,7 +85,7 @@ export function frequencyToTextMapper(freq: string): string {
 
 export function startKeepAlive() {
     console.log('Starting Keep Awake function');
-    setInterval(function () {
+    return setInterval(function () {
         Axios.get(process.env.APP_URL!).
             then(res => console.log('Pinging APP URL Success')).catch(err => {
                 console.log('Pinging APP URL failure', err);

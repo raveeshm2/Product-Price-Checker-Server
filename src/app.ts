@@ -47,9 +47,6 @@ if (process.env.NODE_ENV === "production") {
     app.get('/*', function (req, res) {
         res.sendFile(path.join(__dirname, '..', 'build-client', 'index.html'));
     });
-
-    // Ping Heroku server every 20 mins to avoid sleeping of heroku app
-    startKeepAlive();
 }
 
 app.listen(process.env.PORT || 4500, () => {

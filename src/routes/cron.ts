@@ -2,7 +2,9 @@ import express from 'express';
 import { userModel } from '../db/models';
 import cron from 'node-cron';
 import { enableCronJob } from '../common/cron';
-import { frequencyToTextMapper, timeOut } from '../common/util';
+import { frequencyToTextMapper, startKeepAlive, timeOut } from '../common/util';
+
+let intervalID: NodeJS.Timeout | null = null;
 
 const router = express.Router();
 
@@ -61,6 +63,12 @@ router.post('/start', async (req, res, next) => {
     }
     cronGlobal = enableCronJob(expression);
     await timeOut();
+
+    // Ping Heroku server every 20 mins to avoid sleeping of heroku app
+    if (process.env.NODE_ENV === "production" && intervalID === null) {
+        intervalID = startKeepAlive();
+    }
+
     if (restarted) {
         return res.send({ message: ['CRON job restarted successfully '] });
     } else {
@@ -77,6 +85,9 @@ router.post('/stop', async (req, res, next) => {
     user!.cron = undefined;
     await user?.save();
     await timeOut();
+    if (intervalID)
+        clearInterval(intervalID);
+    intervalID = null;
     return res.send({ message: ['CRON job stopped successfully'] });
 });
 
