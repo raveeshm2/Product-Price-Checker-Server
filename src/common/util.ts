@@ -1,7 +1,5 @@
 import { productModel, userModel } from "../db/models";
 import * as bcrypt from "bcryptjs";
-import { enableCronJob } from "./cron";
-import { setCronGlobal } from "../routes/cron";
 import Axios from "axios";
 
 async function clearDB() {
@@ -44,15 +42,6 @@ export const timeOut = () => {
             resolve();
         }, process.env.NODE_ENV !== "production" ? 2000 : 0);
     })
-}
-
-// Runs cron jobs after waking up from sleep state
-export async function checkForCronJobs() {
-    const user = await userModel.findOne({});
-    if (user && user.cron) {
-        console.log("Restarting CRON job");
-        setCronGlobal(enableCronJob(user.cron));
-    }
 }
 
 export function frequencyToTextMapper(freq: string): string {

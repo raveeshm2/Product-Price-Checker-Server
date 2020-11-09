@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
-import { checkForCronJobs, init } from "../common/util";
+import { init } from "../common/util";
+import { checkForCronJobs } from '../routes/cron';
 
 console.log('Connecting to mongo db');
 mongoose.connect(process.env.MONGO_URI!, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })

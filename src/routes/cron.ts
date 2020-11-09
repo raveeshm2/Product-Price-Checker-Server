@@ -104,8 +104,17 @@ router.get('/status', async (req, res, next) => {
     }
 });
 
-export function setCronGlobal(value: cron.ScheduledTask | null) {
-    cronGlobal = value;
+// Runs cron jobs after waking up from sleep state
+export async function checkForCronJobs() {
+    const user = await userModel.findOne({});
+    if (user && user.cron) {
+        console.log("Restarting CRON job");
+        cronGlobal = enableCronJob(user.cron);
+        // Ping Heroku server every 20 mins to avoid sleeping of heroku app
+        if (process.env.NODE_ENV === "production" && intervalID === null) {
+            intervalID = startKeepAlive();
+        }
+    }
 }
 
 export default router;
