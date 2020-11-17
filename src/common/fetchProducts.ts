@@ -8,11 +8,11 @@ const getFlipKartProductPromise = (product: InstanceType<product>) => {
     return new Promise(async (resolve, reject) => {
         const html = (await Axios.get(product.url)).data;
         const $ = cheerio.load(html);
-        const priceElement = $('._1vC4OE').html()?.split(';')[1].replace(',', '');
+        const priceElement = $('._16Jk6d').html()?.split(';')[1].replace(',', '');
         let price;
         if (priceElement)
             price = parseInt(priceElement)
-        const productName = $('._35KyD6').html();
+        const productName = $('._2NKhZn p').html();
         resolve({ id: product._id, alias: product.alias, productName, url: product.url, portal: product.portal, price, cutOffPrice: product.cutOffPrice, imgURL: product.imgURL });
     });
 }
